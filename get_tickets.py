@@ -6,11 +6,11 @@ from datetime import datetime
 
 def get_tickets(status):
     # Chaves de API
-    api_key = 'zXsSugfT2kgB6oAEMpTtQKDXvde8DQjX'
-    api_token = 'zXsSugfT2kgLFDf1RgeTJW82sH9vIEM'
+    api_key = 'SUA API KEY'
+    api_token = 'SEU API TOKEN'
 
     # Solicitar token de autenticação
-    login_url = 'https://api.auvo.com.br/v2/login/'
+    login_url = 'url do login de autorização'
     headers = {
         'Content-Type': 'application/json'
     }
@@ -36,8 +36,8 @@ def get_tickets(status):
             "SearchTasks": "true"
         })
 
-        # URL para a solicitação dos tickets
-        url_request = 'https://api.auvo.com.br/v2/tickets/'
+        # URL para a solicitação
+        url_request = 'url para o request'
 
         # Fazer a solicitação dos tickets
         params = {
