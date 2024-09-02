@@ -1,84 +1,70 @@
 import pandas as pd
-from datetime import datetime, timedelta
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
+from datetime import datetime
+import time
 
-from get_tickets import get_tickets 
+from get_tickets import get_tickets
 from url_taskid import url_taskid
+from send_email import send_email
 
+def main_loop():
+    sent_ticket_ids = set()
 
-def send_email(tickets, tasks):
-    status = '5'
-    tickets = get_tickets(status)
-    extracted_data = []
-    if tickets:
-        for ticket in tickets:
-            extracted_ticket = {
-                'id': ticket.get('id'),
-                'creationDate': ticket.get('creationDate'),
-                'title': ticket.get('title'),
-                'customerName': ticket.get('customerName'),
-                'statusType': ticket.get('statusType'),
-                'taskIds': ticket.get('taskIds'),
-                'endDate': ticket.get('endDate'),
-                'requesterEmail': ticket.get('requesterEmail')
-            }
-            extracted_data.append(extracted_ticket)
+    while True:
+        status = '5'
+        tickets = get_tickets(status)
+        extracted_data_tickets = []
+        new_tickets = []
 
-    tasks = url_taskid()
-    extracted_data_ticket = []
-    if tasks:
-        for task in tasks:
-             if task.get('taskType') == 108332:
-                extracted_taskID = {
-                'taskID': task.get('taskID'),
-                'taskUrl': task.get('taskUrl'),
-                'taskType': task.get('taskType')
-            }
-                extracted_data_ticket.append(extracted_taskID)
+        if tickets:
+            for ticket in tickets:
+                extracted_ticket = {
+                    'id': ticket.get('id'),
+                    'creationDate': ticket.get('creationDate'),
+                    'title': ticket.get('title'),
+                    'customerName': ticket.get('customerName'),
+                    'statusType': ticket.get('statusType'),
+                    'taskIds': ticket.get('taskIds'),
+                    'endDate': ticket.get('endDate'),
+                    'requesterEmail': str(ticket.get('requesterEmail'))
+                }
+                extracted_data_tickets.append(extracted_ticket)
+                if ticket.get('id') not in sent_ticket_ids:
+                    new_tickets.append(extracted_ticket)
 
-    smtp_server = "smtp.gmail.com"
-    smtp_port = 587
-    smtp_username = "joaovictorfernandescastro@gmail.com"
-    smtp_password = "vujc gtmy arbp ufmx"
+            df_tickets = pd.DataFrame(extracted_data_tickets)
+            print("Tickets encerrados:")
+            print(df_tickets)
+        else:
+            print("Nenhum ticket encerrado encontrado na data e horário atual.")
 
-    requester_email = 'joaovfernandescastro@gmail.com'
-    if extracted_data and extracted_data_ticket:
-        ticket = extracted_data[0]
-        task = extracted_data_ticket[0]
-        for ticket, task in zip(tickets, tasks):
-            subject = f"{ticket['title']} ENCERRADO"
-            body = f"""
-            O ticket com o ID {ticket['id']} foi encerrado.
-            Título: {ticket['title']}
-            Tipo de Tarefa: Corretiva
-            Status: Encerrado
-            Task IDs: {ticket['taskIds']}
-            Data de encerramento: {ticket['endDate']}
-            Relatório da tarefa: {task['taskUrl']}
-            """
+        tasks = url_taskid()
+        extracted_data_tasks = []
 
-        msg = MIMEMultipart()
-        msg['From'] = smtp_username
-        msg['To'] = requester_email
-        msg['Subject'] = subject
+        if tasks:
+            for task in tasks:
+                if task.get('taskType') == 108332 and "CONFERIDO" in task.get('keyWordsDescriptions', []):
 
-        msg.attach(MIMEText(body, 'plain'))
+                    extracted_taskID = {
+                        'taskID': task.get('taskID'),
+                        'taskUrl': task.get('taskUrl'),
+                        'taskType': task.get('taskType'),
+                        'keyWords': task.get('keyWords'),
+                        'keyWordsDescriptions': task.get('keyWordsDescriptions')
+                    }
+                    extracted_data_tasks.append(extracted_taskID)
+            df_tasks = pd.DataFrame(extracted_data_tasks)
+            print("Tarefas encontradas:")
+            print(df_tasks)
+        else:
+            print("Nenhuma tarefa encontrada para os taskIDs dos tickets encerrados.")
 
-        try:
-            server = smtplib.SMTP(smtp_server, smtp_port)
-            server.starttls()
-            server.login(smtp_username, smtp_password)
-            text = msg.as_string()
-            server.sendmail(smtp_username, requester_email, text)
-            server.quit()
-            print(f"Email enviado para {requester_email} com sucesso.")
-        except Exception as e:
-            print(f"Erro ao enviar email: {e}")
+        if new_tickets and extracted_data_tasks:
+            send_email(new_tickets, extracted_data_tasks)
+            for ticket in new_tickets:
+                sent_ticket_ids.add(ticket['id'])
 
-# Chame a função fora dela mesma
-try:
-    send_email(None, None)  # Passe os valores adequados para a função
-except Exception as e:
-    print(f"Erro ao enviar email: {e}")
+        print("Aguardando 30 segundos para a próxima atualização...")
+        time.sleep(30)
+
+if __name__ == "__main__":
+    main_loop()

@@ -45,7 +45,7 @@ def url_taskid():
             'paramFilter': param_filter,
             'page': '1',
             'pageSize': '100',
-            'order': 'asc',
+            'order': 'asc'
           }
 
 
@@ -65,7 +65,7 @@ tasks = url_taskid()
 extracted_data = []
 if tasks:
     for task in tasks:
-        if task.get('taskType') == 108332 and task.get('keyWordsDescriptions') == "CONFORME":
+        if task.get('taskType') == 108332 and "CONFORME" in task.get('keyWordsDescriptions', []):
             extracted_taskID = {
             'taskID': task.get('taskID'),
             'taskUrl': task.get('taskUrl'), 

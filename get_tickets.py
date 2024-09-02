@@ -30,7 +30,7 @@ def get_tickets(status):
         start_date = datetime.now().strftime('%Y-%m-%d')
         end_date = datetime.now().strftime('%Y-%m-%d')
         param_filter = json.dumps({
-            "startDate": start_date,
+            "startDate": "2024-08-01",
             "endDate": end_date,
             "status": status,
             "SearchTasks": "true"
