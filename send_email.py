@@ -39,12 +39,12 @@ def send_email(tickets, tasks):
 
     smtp_server = "smtp.gmail.com"
     smtp_port = 587
-    smtp_username = "joaovictorfernandescastro@gmail.com"
-    smtp_password = "vujc gtmy arbp ufmx"
+    smtp_username = "seu email"
+    smtp_password = "sua senha de acesso"
 
     if extracted_data and extracted_data_ticket:
         for ticket in extracted_data:
-            requester_email = "joaovfernandescastro@gmail.com"
+            requester_email = "{requesterEmail}"
             all_tasks_conferido = all(
                 "CONFERIDO" in task['keyWordsDescriptions']
                 for task in extracted_data_ticket
