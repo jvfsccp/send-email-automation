@@ -1,18 +1,23 @@
 # Sistema de automação com python para envio de emails
 
 ## O que é cada arquivo?
-- app.py é onde fica o código para envio de email
-- main_loop.py é o looping infinito para o envio (onde basicamente a automação vai ficar rodando durante o dia)
+- app.py é onde fica o meu looping infinito de atualizações
+- send_email.py é o arquivo que irá realizar o envio de emails
 - get_tickets.py é onde buscamos os tickets encerrados
 - url_taskid.py é o arquivo responsável por me disponiblizar a task_url e taskID em lote dos tickets encerrados.
 
-## O que está dando errado?
-- Pois então, você vai ver que estará tudo funcionando normalmente se você for no main loop e retirar essa parte do código, a parte que tem o conforme e o seu código:
-- ![image](https://github.com/user-attachments/assets/00c9bc6d-b60e-4290-b8a0-2b5c0d4224b4)
-- Infelizmente preciso conseguir buscar os tickets e tarefas encerradas com a keyWord "CONFORME" que tem o id de 124242, porém ela não é buscada com nenhum parametro que tentei.
+## Funcionalidades
+- Busca o ticket com o status "encerrado";
+- Com o ticket pela api temos o retorno de: email de cliente, nome do cliente, titulo e etc;
+- Quando efetuar a busca do ticket, terá todas as tarefas relacionadas a ele;
+- Encontrando essas tarefas, vamos buscar por tarefas especifícas relacionadas a esse ticket;
+- Encontrando a url da tarefa, id de cada uma e o mais importante: a palavra-chave;
+- Caso tenha a palavra-chave "CONFERIDO" em cada uma, o email será enviado automaticamente para o cliente informando que foi finalizado o ticket;
+- Caso não tenha em todas, o email não será enviado;
+- Atualiza de 1 em 1 hora na prática, porém aqui no repositório deixei de 30 em 30 segundos.
 
-## Por que é necessário o "CONFORME"?
-- Pois essas tarefas e tickets que são encerradas com essa keyWord está tudo ok para ser enviado o email para o cliente, alegando que a tarefa foi finalizada corretamente.
-- Sem o conforme, poderia vir com falhas na finalização ou alguma cagada de algum colaborador (risos).
+## História por trás
+### Há mais ou menos 3 meses e meio meu chefe no meu estágio (na época) me perguntou se eu sabia fazer algum tipo de automação, respondi que não, porém me coloquei a disposição para fazer de qualquer forma. Ele me passou as instruções sobre o que seria e então comecei a desenvolver, está ai finalizada agora após 3 meses de desenvolvimento somente no horário de expediente quando sobrava algum tempinho em relação as outras tarefas.
 
-### Ah, você pode mudar os emails lá para fazer o teste, tem dois emails meu lá mas pode mudar para o seu e sua senha também para dar certo.
+
+<img src="https://user-images.githubusercontent.com/49786548/84605451-b6d36200-ae73-11ea-94b3-9927d07f85fd.png">
