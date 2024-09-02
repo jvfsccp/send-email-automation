@@ -10,11 +10,11 @@ def url_taskid():
         start_date = datetime.now().strftime('%Y-%m-%d')
 
         # Chaves de API
-        api_key = 'zXsSugfT2kgB6oAEMpTtQKDXvde8DQjX'
-        api_token = 'zXsSugfT2kgLFDf1RgeTJW82sH9vIEM'
+        api_key = 'sua api key'
+        api_token = 'sua api token'
 
         # Solicitar token de autenticação
-        login_url = 'https://api.auvo.com.br/v2/login/'
+        login_url = 'url para gerar a autenticação'
         headers = {
             'Content-Type': 'application/json'
         }
@@ -32,14 +32,14 @@ def url_taskid():
 
         # Criar o filtro de parâmetros para buscar as tarefas correspondentes aos taskIDs dos tickets encerrados
         param_filter = json.dumps ({
-            "startDate":"2024-06-01",
+            "startDate":start_date,
             "endDate":end_date,
             "status":"5",
             "SearchTasks":"true"
         })
 
         # URL para a solicitação das tasks
-        url_request = 'https://api.auvo.com.br/v2/tasks/'
+        url_request = 'url para o request'
 
         params = {
             'paramFilter': param_filter,
